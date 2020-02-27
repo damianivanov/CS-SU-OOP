@@ -62,6 +62,7 @@ Player read_File(ifstream& in, string name_of_file, int index) // returning the 
     return player;
 }
 
+
 void write_File(ofstream& out, string name_of_file, Player& player) //writes struct player to the file
 {
     out.open(name_of_file, ios::app);
@@ -90,23 +91,6 @@ void print_Player(Player& player)
 void print_Card(Card& card)
 {
     cout << card.id << "::" << card.color<< "::" <<card.name << endl;
-}
-
-int unique_Id(string file_name)
-{
-    ifstream out;
-    int result = 0;
-    if (file_name == "cards")
-    {
-        result = id_cards();
-    }
-    else if (file_name == "players")
-    {
-        result = id_players();
-    }
-    else if (file_name == "decks")
-        result = id_decks();
-    return result;
 }
 
 unsigned int id_cards()
@@ -157,6 +141,24 @@ unsigned int id_decks()
     out.close();
     return deck.player_id == 0 ? 0 : deck.player_id + 1;
 }
+
+int unique_Id(string file_name)
+{
+    ifstream out;
+    int result = 0;
+    if (file_name == "cards")
+    {
+        result = id_cards();
+    }
+    else if (file_name == "players")
+    {
+        result = id_players();
+    }
+    else if (file_name == "decks")
+        result = id_decks();
+    return result;
+}
+
 
 void create_player()
 {
