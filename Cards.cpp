@@ -102,6 +102,28 @@ Card read_File_Card(int index)
 	in.close();
 	return card;
 }
+string color_of_the_card(int index)
+{
+	Card card = read_File_Card(index);		
+	return string(card.color);
+}
+string color_of_the_card(string name)
+{
+	ifstream in;
+	in.open(cards_File, ios::binary);
+	for (size_t i = 0; i < next_card_id; i++)
+	{
+		Card card;
+		in.read((char*)&card, sizeof(Card));
+		if (card.name==name)
+		{
+			in.close();
+			return card.color;
+		}
+	}
+	in.close();
+	return "";
+}
 
 template <typename T>
 void write_File( string name_of_file, T& object) //writes struct player to the file
@@ -111,6 +133,7 @@ void write_File( string name_of_file, T& object) //writes struct player to the f
 	out.write((char*)&object, sizeof(T));
 	out.close();
 }
+
 int player_exist(Player& player)
 {
 	ifstream in;
@@ -146,6 +169,7 @@ int card_exists(Card& card)
 	return -1;
 
 }
+
 bool all_cards_exist(int* cards_ids)
 {
 	for (size_t i = 0; i < 60; i++)
@@ -166,11 +190,6 @@ bool all_cards_exist(int* cards_ids)
 		delete[] name;
 	}
 	return true;
-}
-string color_of_the_card(int index)
-{
-	Card card = read_File_Card(index);		
-	return string(card.color);
 }
 string color_of_the_deck(int* cards_id)
 {
@@ -249,6 +268,52 @@ string print_all_decks_by_color(string color)
 	in.close();
 	return result;
 }
+string print_most_used_card()
+{
+	unordered_map<string, int> cards;
+	
+	ifstream in_decks;
+	ifstream in_cards;
+	string result;
+	in_cards.open(cards_File, ios::binary);
+	in_decks.open(decks_File, ios::binary);
+	for (size_t i = 0; i < all_decks; i++)
+	{
+		Deck deck;
+		in_decks.read((char*)&deck, sizeof(deck));
+		for (size_t i = 0; i < 60; i++)
+		{
+			Card card;
+			card = read_File_Card(deck.cards_ids[i]);
+			if (cards.find(card.name) != cards.end())//found
+			{
+				cards[card.name]++;
+			}
+			//not found
+			else
+			{
+				cards.insert(pair<string,int>(card.name,1));
+			}
+		}
+	}
+	int currentMax = 0;
+	string name_of_max = "";
+	for (auto it = cards.cbegin(); it != cards.cend(); ++it)
+	{
+		if (it->second > currentMax)
+		{
+		name_of_max = it->first;
+		currentMax = it->second;
+		}
+	}
+	
+	result.append("Most common card: ");
+	result.append(name_of_max);
+	result.append(" Color:");
+	result.append(color_of_the_card(name_of_max));
+	return result;
+}
+
 void create_player()
 {
 	
@@ -262,8 +327,15 @@ void create_player()
 	cin.getline(name, 128); //name input
 	strncpy(curr_player.name, name, 128); //setting player's name
 
-	write_File(players_File,curr_player); //writes the player to the file
-	cout << ">Player \"" << curr_player.name << "\"" << " created" << endl;
+	if (player_exist(curr_player)!=-1) //checks if player already exists 
+	{
+
+		cout << "Player \"" << curr_player.name << "\" already exists" << endl;
+	}
+	else {
+		write_File(players_File, curr_player); //writes the player to the file
+		cout << ">Player \"" << curr_player.name << "\"" << " created" << endl;
+	}
 	delete[] name;
 }
 void create_card()
@@ -284,9 +356,16 @@ void create_card()
 
 	strncpy(curr_card.name, name, 64); //setting card's name
 	strncpy(curr_card.color, color_input, 6); // setting card's color
-	write_File(cards_File,curr_card); //writes the struct to the file
-
-	cout << ">Card \"" << curr_card.name << "\"" << " created" << endl;
+	
+	if (card_exists(curr_card)!=-1)//checks if card already exists
+	{
+		cout << "Card \"" << curr_card.name << "\" already exists" << endl;
+	}
+	else
+	{
+		write_File(cards_File, curr_card); //writes the struct to the file
+		cout << ">Card \"" << curr_card.name << "\"" << " created" << endl;
+	}
 
 	delete[] color_input;
 	delete[] name;
@@ -348,18 +427,21 @@ void report()
 	colors["Green"] = 0;
 	ordered_colors.push_back("Green");
 
+	//poslednata teste go vzima 2 puti ako e s while(out)
+
 	for (int i=0;i<ordered_colors.size();++i)
 	{
 		out << ordered_colors[i] << endl;
 		out << print_all_decks_by_color(ordered_colors[i]);
 	}
-	out.close();
+	out <<print_most_used_card();
 	cout << ">report generated" << endl;
+	out.close();
 
-	//poslednata teste go vzima 2 puti
 
 
 }
+
 int main()
 {
 	string line;
