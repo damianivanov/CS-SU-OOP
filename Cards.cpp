@@ -300,7 +300,7 @@ string print_most_used_card()
 	string name_of_max = "";
 	for (auto it = cards.cbegin(); it != cards.cend(); ++it)
 	{
-		if (it->second > currentMax)
+		if (it->second >= currentMax)
 		{
 		name_of_max = it->first;
 		currentMax = it->second;
