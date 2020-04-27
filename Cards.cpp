@@ -15,6 +15,7 @@ static const string decks_File = "decks.dat";
 static int next_card_id = 0;
 static int next_player_id = 0;
 static int all_decks = 0;
+
 bool all_files_created()
 {
 	bool result = true;
