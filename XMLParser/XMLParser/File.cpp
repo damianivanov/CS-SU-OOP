@@ -90,8 +90,8 @@ void File::SaveAs(std::string new_path)
 
 std::vector<std::string> File::Name_extension_parser(std::string path) {
 
-	std::regex r_extension("\\.\\w+$");
-	std::regex r_name("\\\w+\\.\\w+$");
+	std::regex r_extension(".\\w*$");
+	std::regex r_name("(\\w+)(?=\\.)");
 
 	std::smatch m_extension;
 	std::smatch m_name;
@@ -99,13 +99,10 @@ std::vector<std::string> File::Name_extension_parser(std::string path) {
 	std::regex_search(path, m_extension, r_extension);
 	std::regex_search(path, m_name, r_name);
 
-	std::string new_extension = m_extension.str();
-	std::string new_name = m_name.str();
-	new_name = new_name.substr(0, new_name.size() - new_extension.size());
-	
 	std::vector<std::string> result;
-	result.push_back(new_name);
-	result.push_back(new_extension);
+
+	result.push_back(m_name.str());
+	result.push_back(m_extension.str());
 
 	return result;
 }

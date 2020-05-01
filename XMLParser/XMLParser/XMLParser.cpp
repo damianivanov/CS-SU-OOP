@@ -24,6 +24,11 @@ int main()
     //file.SaveAs(new_path);
     XML xml(file.get_content());
     xml.Print();
+    xml.Deserialization();
+    xml.Select("0", "id");
+    xml.Set("0", "id", "5");
+    xml.Select("5", "id");
+    xml.Text("5");
     file.Close();
 
 }
