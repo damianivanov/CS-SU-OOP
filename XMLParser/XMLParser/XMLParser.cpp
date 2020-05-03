@@ -25,6 +25,10 @@ int main()
     XML xml(file.get_content());
     xml.Print();
     xml.Deserialization();
+    xml.Delete("1", "id");
+    xml.Children("0");
+    xml.Child("1", 1);
+    xml.NewChild("1");
     xml.Select("0", "id");
     xml.Set("0", "id", "5");
     xml.Select("5", "id");

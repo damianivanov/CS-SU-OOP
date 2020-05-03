@@ -3,6 +3,16 @@
 Element::~Element(){}
 Element::Element() { parent = NULL; }
 
+Element& Element::operator= (const Element& other)
+{
+	this->attributes = other.attributes;
+	this->childs = other.childs;
+	this->parent = other.parent;
+	this->name = other.name;
+	this->text = other.text;
+	this->id = other.id;
+	return *this;
+}
 //getters
 
 string Element::get_id() {return id;}
@@ -11,12 +21,12 @@ vector<Element> Element::get_childs() {return childs;}
 Element* Element::get_parent() {return parent;}
 string Element::get_name() { return name; }
 string Element::get_text() { return text; }
-
+bool Element::IsClosingTag() { return name[0] == '/'; }
 //setters
 void Element::set_name(string name) { this->name = name; }
 void Element::set_id(string id) { this->id = id; }
 void Element::set_attributes(map<string, string> attributes) { this->attributes = attributes; }
-void Element::set_childs(vector<Element> childs) { this->childs = childs; }
+void Element::add_child(Element& child) {this->childs.push_back(child);}
 void Element::set_parent(Element& parent) { this->parent = &parent; }
 
 void Element::Add_attribute(string key, string value){
@@ -25,7 +35,7 @@ void Element::Add_attribute(string key, string value){
 void Element::Extract_name(string line)
 {
 	//<people>
-	regex r_name("(?!\\<)\\w*(?=\\>)|(?!\\<)\\w*(?= )");
+	regex r_name("(?!\\<)\\w*(?=\\>)|(?!\\<)\\w*(?= )|\\/\\w*(?=\\>)");
 	smatch m_name;
 	regex_search(line, m_name, r_name);
 	name = m_name.str();
