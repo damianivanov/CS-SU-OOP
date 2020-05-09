@@ -10,6 +10,7 @@ public:
 	void Save();
 	void SaveAs(std::string new_path);
 	void Close();
+	void Write_Content(std::vector<std::string> text);
 	std::vector<std::string> get_content();
 	~File();
 

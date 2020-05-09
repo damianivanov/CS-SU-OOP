@@ -1,7 +1,7 @@
 #include "Element.h"
 
 Element::~Element(){}
-Element::Element() { parent = NULL; }
+Element::Element() { tabs=0 ; parent = NULL; }
 
 Element& Element::operator= (const Element& other)
 {
@@ -25,6 +25,7 @@ bool Element::IsClosingTag() { return name[0] == '/'; }
 //setters
 void Element::set_name(string name) { this->name = name; }
 void Element::set_id(string id) { this->id = id; }
+void Element::set_tabs(int tabs) { this->tabs = tabs; }
 void Element::set_attributes(map<string, string> attributes) { this->attributes = attributes; }
 void Element::add_child(Element& child) {this->childs.push_back(child);}
 void Element::set_parent(Element& parent) { this->parent = &parent; }
@@ -77,5 +78,30 @@ map<string, string> Element::Attribute_parse(string line) {
 	{
 		result.insert(pair<string,string>(m_key[i], m_value[i]));
 	}
+	return result;
+}
+string Element::To_string() {
+	
+	string result;
+	for (int i = 0; i < tabs; i++)
+	{
+		result += "\t";
+	}
+	result+= "<" + name;
+	if (attributes.size()!=0)
+	{
+		for (auto x : attributes)
+		{
+			result += " " + x.first + "=\"" + x.second + "\"";
+		}
+	}
+
+	if (this->childs.size() == 0 && !this->IsClosingTag())
+	{
+		result += "> " + text;
+		result += " </" + name + ">";
+	}
+	else
+		result += ">";
 	return result;
 }

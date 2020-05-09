@@ -149,13 +149,17 @@
   <ItemGroup>
     <ClCompile Include="Element.cpp" />
     <ClCompile Include="File.cpp" />
+    <ClCompile Include="Repl.cpp" />
     <ClCompile Include="XML.cpp" />
     <ClCompile Include="XMLParser.cpp" />
+    <ClCompile Include="XPath.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Element.h" />
     <ClInclude Include="File.h" />
+    <ClInclude Include="Repl.h" />
     <ClInclude Include="XML.h" />
+    <ClInclude Include="XPath.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

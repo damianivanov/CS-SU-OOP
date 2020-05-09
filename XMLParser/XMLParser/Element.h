@@ -27,8 +27,9 @@ class Element
 		void set_name(string name);
 		void set_id(string id);
 		void set_attributes(map<string,string> attributes);
-		void add_child(Element& child);
 		void set_parent(Element& parent);
+		void set_tabs(int);
+		void add_child(Element& child);
 
 		void Extract_attributes(string line);
 		void Extract_name(string line);
@@ -36,6 +37,7 @@ class Element
 
 		void Add_attribute(string key, string value);
 		bool IsClosingTag();
+		string To_string();
 	private:	   
 		string name;
 		vector<Element> childs;
@@ -43,6 +45,7 @@ class Element
 		string id= "none";
 		map<string, string> attributes;
 		string text;
+		int tabs;
 
 		map<string,string> Attribute_parse(string line);
 };

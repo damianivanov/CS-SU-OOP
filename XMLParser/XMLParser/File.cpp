@@ -27,6 +27,14 @@ bool File::File_create()
 	return true;
 }
 
+void File::Write_Content(std::vector<std::string> text)
+{
+	content.clear();
+	for (auto x: text)
+	{
+		content.push_back(x);
+	}
+}
 bool File::Read_content()
 {
 	std::ifstream FileIf(path);
@@ -69,7 +77,7 @@ void File::Save()
 		return;
 	for (std::string x : content)
 	{
-		FileOf << x+"\n";
+		FileOf << x;
 	}
 	FileOf.close();
 	std::cout << "Successfully saved " << name << extension << "\n";
@@ -82,11 +90,12 @@ void File::SaveAs(std::string new_path)
 	std::ofstream FileOf(new_path, std::ios::trunc);
 	for (std::string x : content)
 	{
-		FileOf << x + "\n";
+		FileOf << x;
 	}
 	FileOf.close();
 	std::cout << "Successfully saved another " << new_name<<new_extension << "\n";
 }
+
 
 std::vector<std::string> File::Name_extension_parser(std::string path) {
 
