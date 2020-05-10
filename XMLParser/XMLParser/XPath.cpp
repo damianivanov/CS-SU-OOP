@@ -20,24 +20,33 @@ vector<string> XPath::Parser(string id, string xpath)
 	}
 	else if (xpath.find('@')!=string::npos)
 	{
+		regex r_index("[^\\@]\\w+(?=\\))");
+		regex r_element("^\\w+");
 
+		smatch s_index;
+		smatch s_element;
+
+		regex_search(xpath, s_index, r_index);
+		regex_search(xpath, s_element, r_element);
+
+		string key = s_index.str();
+		string element = s_element.str();
+
+		result = this->At(element, key);
 	}
 	else if (xpath.find('[')!=string::npos && xpath.find(']')!=string::npos) 
 	{
-
+		regex r_index("(?!\\[)\\d+(?=\\])");
+		smatch s_index;
+		regex_search(xpath, s_index, r_index);
+		int index=stoi(s_index.str());
+		vector<string> elements = xpath_to_vector(xpath);
+		result[0] = this->Index(elements[0],elements[1],index);
 	}
 	else if (xpath.find('/')!=string::npos)
 	{
-		regex r_element("\\w+(?=\\/)");
-		regex r_key("(?!\\/)\\w+$");
-
-		smatch s_element;
-		smatch s_key;
-
-		regex_search(xpath, s_element, r_element);
-		regex_search(xpath, s_key, r_key);
-		
-		result = this->Dash(s_element.str(),s_key.str());
+		vector<string> elements = xpath_to_vector(xpath);
+		result = this->Dash(elements[0],elements[1]);
 	}
 	return result;
 
@@ -114,4 +123,18 @@ vector<string> XPath::Equal(string element, string key, string value)
 			result.push_back(x);
 	}
 	return result;
+}
+
+vector<string> XPath::xpath_to_vector(string xpath)
+{
+	vector<string> elements;
+
+	regex r_element("\\w+(?!\\/)\\w+");
+	smatch s_element;
+	while (regex_search(xpath, s_element, r_element))
+	{
+		elements.push_back(s_element.str());
+		xpath = s_element.suffix();
+	}
+	return elements;
 }

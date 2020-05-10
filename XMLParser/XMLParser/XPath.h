@@ -19,5 +19,6 @@ public:
 
 private:
 	vector<Element> Deserialized;
+	vector<string> xpath_to_vector(string xpath);
 };
 
