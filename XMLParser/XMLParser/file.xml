@@ -3,8 +3,9 @@
 		<name>John Smith</name>
 		<address>USA</address>
 	</person>
-	<person id="1">
+	<person id="0">
 		<name>Ivan Petrov</name>
 		<address>Bulgaria</address>
+			<city>Sofia</city>
 	</person>
 </people>

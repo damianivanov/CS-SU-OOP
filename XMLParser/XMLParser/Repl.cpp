@@ -114,10 +114,18 @@ void Repl::REPL() {
 			}
 			else if (strcmp(command.c_str(), "xpath") == 0)
 			{
+				if (tokens.size()<2)
+				{
+					cout << "Invalid XPath" << endl;
+					continue;
+				}
 				auto result = xpath->Parser(tokens[0], tokens[1]);
 				for (auto x : result)
 				{
-					cout <<" -" << x << endl;
+					if (x!="")
+					{
+						cout <<" - " << x << endl;
+					}
 				}
 			}
 		}

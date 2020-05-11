@@ -24,7 +24,7 @@ string Element::get_text() { return text; }
 bool Element::IsClosingTag() { return name[0] == '/'; }
 //setters
 void Element::set_name(string name) { this->name = name; }
-void Element::set_id(string id) { this->id = id; }
+void Element::set_id(string id) { this->id = id; attributes["id"] = id;}
 void Element::set_tabs(int tabs) { this->tabs = tabs; }
 void Element::set_attributes(map<string, string> attributes) { this->attributes = attributes; }
 void Element::add_child(Element& child) {this->childs.push_back(child);}
@@ -36,7 +36,8 @@ void Element::Add_attribute(string key, string value){
 void Element::Extract_name(string line)
 {
 	//<people>
-	regex r_name("(?!\\<)\\w*(?=\\>)|(?!\\<)\\w*(?= )|\\/\\w*(?=\\>)");
+	//regex r_name("(?!\\<)\\w*(?=\\>)|(?!\\<)\\w*(?= )|\\/\\w*(?=\\>)");
+	regex r_name("[^\\<]\\w+(?=\\>)|[^\\<]\\w+(?=\\ )|\\/\\w*(?=\\>)");
 	smatch m_name;
 	regex_search(line, m_name, r_name);
 	name = m_name.str();

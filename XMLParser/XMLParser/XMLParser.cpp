@@ -10,20 +10,9 @@ using namespace std;
 
 int main()
 {
+    //open C:\Users\Damian's PC\Documents\GitHub\CS-SU-OOP\XMLParser\XMLParser\file.xml
     Repl repl;
     repl.REPL();
-    ////open C:\Users\Damian's PC\Documents\GitHub\CS-SU-OOP\XMLParser\XMLParser\file.xml
-    ////string new_path = "C:\\Users\\Damian's PC\\Documents\\GitHub\\CS-SU-OOP\\XMLParser\\XMLParser\\Newfile.xml";
-
-    //file.Open(path);
-    ////file.SaveAs(new_path);
-    //XML xml(file.get_content());
-    //xml.NewChild("1");
-    //XPath xpath(xml);
-    //xpath.Dash("person", "address");
-    //xpath.At("person", "name");
-    //xpath.Equal("person","address","USA");
-    //file.Close();
 
 }
 

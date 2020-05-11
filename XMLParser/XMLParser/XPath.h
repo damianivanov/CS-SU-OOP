@@ -12,10 +12,10 @@ public:
 	
 	vector<string> Parser(string id,string xpath);
 
-	vector<string> Dash(string element, string key);
-	string Index(string element,string key,int index);
-	vector<string> At(string id, string element);
-	vector<string> Equal(string element, string key, string value);
+	vector<string> Dash(vector<string> elements);
+	string Index(vector<string> elements,int index);
+	vector<string> At(string key, vector<string> elements);
+	vector<string> Equal(vector<string> elements, string key, string value);
 
 private:
 	vector<Element> Deserialized;

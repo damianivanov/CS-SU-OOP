@@ -103,7 +103,8 @@ void XML::NewChild(string id)
 {
 	Element* element = Element_ById(id);
 	Element new_child;
-	new_child.set_id(to_string(Free_Id("none")));
+	//TODO
+	new_child.set_id(to_string(Same_ID("none")));
 	new_child.set_parent(*element);
 	element->add_child(new_child);
 	int i = Index_ById(element->get_id());
@@ -139,27 +140,30 @@ void XML::Deserialization()
 		{
 			el.Extract_attributes(line);
 			el.Extract_text(line);
-			if (el.get_id() != "none")
-			{
-				//check if there are no duplicates
-				if (Duplicates(el.get_id()))
-				{
-					int next_Id = Free_Id(el.get_id());
-					string new_Id = el.get_id() + "_" + to_string(next_Id);
-					el.set_id(new_Id);
-					el.Add_attribute("id", new_Id);
-				} 
-			}
-			else
-			{
-			string new_id = to_string(Deserialized.size());
-			el.set_id(new_id);
-			el.Add_attribute("id", to_string(Deserialized.size()));
-			}
+
+			//--mash potatoes-- 
+			//if (el.get_id() != "none")
+			//{ 
+			//	//check if there are no duplicates
+			//	if (Duplicates(el.get_id()))
+			//	{
+			//		int next_Id = Free_Id(el.get_id());
+			//		string new_Id = el.get_id() + "_" + to_string(next_Id);
+			//		el.set_id(new_Id);
+			//		el.Add_attribute("id", new_Id);
+			//	}
+			//}
+			//}
+			//else
+			//{
+			//	string new_id = to_string(Deserialized.size());
+			//	el.set_id(new_id);
+			//	el.Add_attribute("id", to_string(Deserialized.size()));
+			//}
 		}
-		Add_Element(el);
-		
+		Add_Element(el);		
 	}
+	ID_Setter();
 	Setting_Parents();
 	Setting_Childs();
 }
@@ -227,32 +231,46 @@ void XML::Setting_Childs()
 }
 bool XML::Duplicates(string value)
 {
+	int counter = 0;
 	for (auto x : Deserialized)
 	{
-		if (x.get_id() == value) {
-			return true;
-		}
+		if (x.get_id() == value)
+			counter++;
 	}
-	return false;
+	return counter > 1;
 }
-int XML::Free_Id(string value) {
+int XML::Same_ID(string value) {
 	int with_same_Id = 0;
 	for (auto x : Deserialized)
 	{
-		string regexQuery = "["+ value+ "]|(?!\")[" + value+ "](?=_)";
-		regex r_id(regexQuery);
-		smatch s_id;
-		string curr_Id = x.get_id();		 
-		regex_search(curr_Id,s_id,r_id);
-		return s_id.size();
+		////only way to put parameters in regex
+		//string regexQuery = "["+ value+ "]|(?!\")[" + value+ "](?=_)";
+		//regex r_id(regexQuery);
+		//smatch s_id;
+		//string curr_Id = x.get_id();	
+		//// for 0_1; 0_2 etc
+		//regex_search(curr_Id,s_id,r_id);
+		//return s_id.size();
+		if (x.get_id()==value)
+		{
+			with_same_Id++;
+		}
 	}
 	return with_same_Id;
 }
 int XML::Tabs(string line) {
+
+	//Bug Found that \t\t\t<...>...</...>\t 
+	//returns 4 instead of 3
+	regex r_before_open_tag("(.*?<)");
+	smatch m_before_open_tag;
+	regex_search(line, m_before_open_tag, r_before_open_tag);
+	string substring = m_before_open_tag.str();
+
 	regex r_tabs("\\t");
 	smatch m_tabs;
 	//stackoverflow
-	return distance(sregex_iterator(line.begin(), line.end(), r_tabs), sregex_iterator());	 
+	return distance(sregex_iterator(substring.begin(), substring.end(), r_tabs), sregex_iterator());
 }
 int XML::Index_ById(string id)
 {
@@ -264,4 +282,24 @@ int XML::Index_ById(string id)
 		index++;
 	}
 	return 0;
+}
+void XML::ID_Setter() 
+{
+	for (auto element:Deserialized)
+	{
+		if (Duplicates(element.get_id())&&element.get_id()!="none")
+		{
+			//int with_same_id = Same_ID(element.get_id());
+			int counter = 1;
+			for (auto z : Deserialized)
+			{
+				if (z.get_id()==element.get_id())
+				{
+					Deserialized.at(Index_ById(z.get_id())).set_id(element.get_id() + "_" + to_string(counter));
+					counter++;
+				}
+			}
+		}
+	}
+
 }

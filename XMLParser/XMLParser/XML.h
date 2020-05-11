@@ -36,9 +36,10 @@ private:
 	void Add_Element(Element& element);
 	void Setting_Parents();
 	void Setting_Childs();
-	bool Duplicates(string value);
-	int Free_Id(string value);
 	int Tabs(string line);
+	void ID_Setter();
+	int Same_ID(string value);
+	bool Duplicates(string value);
 	int Index_ById(string id);
 	
 };
