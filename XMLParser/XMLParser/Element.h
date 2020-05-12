@@ -29,7 +29,7 @@ class Element
 		void set_attributes(map<string,string> attributes);
 		void set_parent(Element& parent);
 		void set_tabs(int);
-		void add_child(Element& child);
+		void add_child(const Element& child);
 
 		void Extract_attributes(string line);
 		void Extract_name(string line);

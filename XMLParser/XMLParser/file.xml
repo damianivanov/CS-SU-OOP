@@ -8,4 +8,9 @@
 		<address>Bulgaria</address>
 			<city>Sofia</city>
 	</person>
+	<person id="0">
+		<name>Georgi Petrov</name>
+		<address>Bulgaria</address>
+			<city>Burgas</city>
+	</person>	
 </people>

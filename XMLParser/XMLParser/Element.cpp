@@ -5,6 +5,7 @@ Element::Element() { tabs=0 ; parent = NULL; }
 
 Element& Element::operator= (const Element& other)
 {
+	this->tabs = other.tabs;
 	this->attributes = other.attributes;
 	this->childs = other.childs;
 	this->parent = other.parent;
@@ -13,8 +14,8 @@ Element& Element::operator= (const Element& other)
 	this->id = other.id;
 	return *this;
 }
-//getters
 
+//getters
 string Element::get_id() {return id;}
 map<string, string> Element::get_attributes() {return attributes;}
 vector<Element> Element::get_childs() {return childs;}
@@ -27,7 +28,7 @@ void Element::set_name(string name) { this->name = name; }
 void Element::set_id(string id) { this->id = id; attributes["id"] = id;}
 void Element::set_tabs(int tabs) { this->tabs = tabs; }
 void Element::set_attributes(map<string, string> attributes) { this->attributes = attributes; }
-void Element::add_child(Element& child) {this->childs.push_back(child);}
+void Element::add_child(const Element& child) {this->childs.push_back(child);}
 void Element::set_parent(Element& parent) { this->parent = &parent; }
 
 void Element::Add_attribute(string key, string value){
@@ -99,8 +100,8 @@ string Element::To_string() {
 
 	if (this->childs.size() == 0 && !this->IsClosingTag())
 	{
-		result += "> " + text;
-		result += " </" + name + ">";
+		result += ">" + text;
+		result += "</" + name + ">";
 	}
 	else
 		result += ">";

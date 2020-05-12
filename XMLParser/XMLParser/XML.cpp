@@ -5,15 +5,21 @@
 	
 XML::XML(){}
 XML::XML(std::vector<std::string> content) {
+	this->next_Id = 0;
 	this->content = content;
-	this->Deserialization();
+	this->Deserialization();	
 }
 XML* XML::operator=(const XML& other) {
 	this->content = other.content;
 	this->Deserialized = other.Deserialized;
+	this->next_Id = other.next_Id;
 	return this;
 }
 XML::~XML(){}
+
+//getter
+vector<Element> XML::get_Deserialized() {return Deserialized;}
+vector<string> XML::get_Content(){return this->content;}
 
 //Requirments
 void XML::Print()
@@ -102,21 +108,22 @@ Element& XML::Child(string id, size_t n)
 void XML::NewChild(string id)
 {
 	Element* element = Element_ById(id);
-	Element new_child;
-	//TODO
-	new_child.set_id(to_string(Same_ID("none")));
-	new_child.set_parent(*element);
-	element->add_child(new_child);
+	Element* new_child = new Element();
+	string child_Id = to_string(next_Id);
 	int i = Index_ById(element->get_id());
 	int tabs = Tabs(content[i])+1;
+	new_child->set_tabs(tabs);
+	new_child->set_id(child_Id);
+	new_child->set_parent(*element);
+	element->add_child(*new_child);
+	;
 	//adding new child to content for serialization
 	Deserialized.insert(Deserialized.begin() + i+1, *element);
 	Deserialized.erase(Deserialized.begin() + i);
-	Deserialized.insert(Deserialized.begin() + i+element->get_childs().size(), new_child);
+	Deserialized.insert(Deserialized.begin() + i+element->get_childs().size(), *new_child);
 }
+//
 
-vector<Element> XML::get_Deserialized() {return Deserialized;}
-vector<string> XML::get_Content(){return this->content;}
 
 Element* XML::Element_ById(string id) {
 	int index = 0;
@@ -125,6 +132,10 @@ Element* XML::Element_ById(string id) {
 		if (element.get_id() == id)
 			break;
 		index++;
+	}
+	if (index==Deserialized.size())
+	{
+		cout << "Invalid ID" << endl;
 	}
 	Element* element = &Deserialized.at(index);
 	return element;
@@ -139,27 +150,7 @@ void XML::Deserialization()
 		if (!el.IsClosingTag())
 		{
 			el.Extract_attributes(line);
-			el.Extract_text(line);
-
-			//--mash potatoes-- 
-			//if (el.get_id() != "none")
-			//{ 
-			//	//check if there are no duplicates
-			//	if (Duplicates(el.get_id()))
-			//	{
-			//		int next_Id = Free_Id(el.get_id());
-			//		string new_Id = el.get_id() + "_" + to_string(next_Id);
-			//		el.set_id(new_Id);
-			//		el.Add_attribute("id", new_Id);
-			//	}
-			//}
-			//}
-			//else
-			//{
-			//	string new_id = to_string(Deserialized.size());
-			//	el.set_id(new_id);
-			//	el.Add_attribute("id", to_string(Deserialized.size()));
-			//}
+			el.Extract_text(line);			
 		}
 		Add_Element(el);		
 	}
@@ -180,7 +171,6 @@ void XML::Clear() {
 	content.clear();
 }
 
-void XML::Add_Element(Element &element) {this->Deserialized.push_back(element);}
 void XML::Setting_Parents() {
 	unordered_map<int,Element*> tmp;
 	int size = Deserialized.size();
@@ -229,6 +219,10 @@ void XML::Setting_Childs()
 		}
 	}
 }
+
+void XML::Add_Element(Element &element) {this->Deserialized.push_back(element);}
+
+//for IDs
 bool XML::Duplicates(string value)
 {
 	int counter = 0;
@@ -236,27 +230,60 @@ bool XML::Duplicates(string value)
 	{
 		if (x.get_id() == value)
 			counter++;
+		
 	}
 	return counter > 1;
 }
 int XML::Same_ID(string value) {
-	int with_same_Id = 0;
-	for (auto x : Deserialized)
+
+	regex r_id("\\d+(?=\\_)");
+	smatch s_id;
+	for (auto x: Deserialized)
 	{
-		////only way to put parameters in regex
-		//string regexQuery = "["+ value+ "]|(?!\")[" + value+ "](?=_)";
-		//regex r_id(regexQuery);
-		//smatch s_id;
-		//string curr_Id = x.get_id();	
-		//// for 0_1; 0_2 etc
-		//regex_search(curr_Id,s_id,r_id);
-		//return s_id.size();
-		if (x.get_id()==value)
+		string ID = x.get_id();
+		regex_search(ID, s_id, r_id);
+		if (s_id.size() != 0 && value==s_id.str()||(value == ID))
 		{
-			with_same_Id++;
+			 return stoi(ID);
 		}
 	}
-	return with_same_Id;
+	return -1;
+}
+void XML::ID_Setter() 
+{
+	//for ids coming from file
+	for (auto element : Deserialized)
+	{
+		if (Duplicates(element.get_id()) && element.get_id() != "none")
+		{
+			int counter = 1;
+			for (auto z : Deserialized)
+			{
+				if (z.get_id() == element.get_id())
+				{
+					Deserialized.at(Index_ById(z.get_id())).set_id(element.get_id() + "_" + to_string(counter));
+					counter++;
+				}
+			}
+		}
+	}
+	//other Ids of all elements
+	int iterator = 0;
+	for (Element element : Deserialized)
+	{
+		bool IsClosing = element.IsClosingTag();
+		string element_id = element.get_id();
+		if(!IsClosing&& element_id=="none")
+		{
+			while (Same_ID(to_string(next_Id))!=-1)
+			{
+				next_Id++;
+			}
+			Deserialized.at(iterator).set_id(to_string(next_Id));
+			next_Id++;
+		}
+		iterator++;
+	}
 }
 int XML::Tabs(string line) {
 
@@ -282,24 +309,4 @@ int XML::Index_ById(string id)
 		index++;
 	}
 	return 0;
-}
-void XML::ID_Setter() 
-{
-	for (auto element:Deserialized)
-	{
-		if (Duplicates(element.get_id())&&element.get_id()!="none")
-		{
-			//int with_same_id = Same_ID(element.get_id());
-			int counter = 1;
-			for (auto z : Deserialized)
-			{
-				if (z.get_id()==element.get_id())
-				{
-					Deserialized.at(Index_ById(z.get_id())).set_id(element.get_id() + "_" + to_string(counter));
-					counter++;
-				}
-			}
-		}
-	}
-
 }

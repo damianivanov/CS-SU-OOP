@@ -32,7 +32,7 @@ public:
 private:
 	std::vector<std::string> content;
 	std::vector<Element> Deserialized;
-
+	int next_Id;
 	void Add_Element(Element& element);
 	void Setting_Parents();
 	void Setting_Childs();

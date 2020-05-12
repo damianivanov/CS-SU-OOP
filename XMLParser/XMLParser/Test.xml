@@ -1,0 +1,31 @@
+<people>
+	<person id="0">
+		<name>John Smith</name>
+		<address>USA</address>
+	</person>
+	<person id="3">
+		<name>Ivan Petrov</name>
+		<address>Bulgaria</address>
+			<city>Sofia</city>
+	</person>
+	<person id="1">
+		<name>Stamat Petrov</name>
+		<address>Bulgaria</address>
+			<city>Sofia</city>
+	</person>
+	<person id="2">
+		<name>Damian Petrov</name>
+		<address>Bulgaria</address>
+			<city>Burgas</city>
+	</person>
+	<person id="1">
+		<name>Georgi Ivanov</name>
+		<address>Bulgaria</address>
+		<tel>0886500</tel>
+	</person>
+	<person id="0">
+		<name>Dimitar Petrov</name>
+		<address>Bulgaria</address>
+		<age>21</age>
+	</person>	
+</people>

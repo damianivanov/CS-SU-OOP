@@ -58,6 +58,11 @@ void Repl::REPL() {
 		{
 			if (strcmp(command.c_str(), "open") == 0)
 			{
+				if (file_Opened!=false)
+				{
+					cout << "File is already opened" << endl;
+					continue;
+				}
 				//path have space in the name
 				if (tokens.size() > 1)
 				{
@@ -68,8 +73,8 @@ void Repl::REPL() {
 				}
 				else
 					file.Open(tokens[0]);
-				
 				file_Opened = true;
+				
 			}
 			else if (strcmp(command.c_str(), "saveas") == 0)
 			{
