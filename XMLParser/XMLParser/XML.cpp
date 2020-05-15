@@ -3,8 +3,8 @@
 #include <regex>
 #include <unordered_map>
 	
-XML::XML(){}
-XML::XML(std::vector<std::string> content) {
+XML::XML() { next_Id = 0;}
+XML::XML(const std::vector<std::string> content) {
 	this->next_Id = 0;
 	this->content = content;
 	this->Deserialization();	
@@ -31,6 +31,8 @@ void XML::Print()
 void XML::Select(string id, string key)
 {
 	Element* element = Element_ById(id);
+	if (!element)
+		return;
 	map<string,string> attributes = element->get_attributes();
 	for (auto it = attributes.cbegin(); it != attributes.cend(); ++it)
 	{
@@ -39,10 +41,13 @@ void XML::Select(string id, string key)
 			cout <<key<<" = "<<it->second <<"\n";
 		}
 	}
+
 }
 void XML::Set(string id, string key, string value) 
 {
 	Element* element = Element_ById(id);
+	if (!element)
+		return;
 	map<string, string> attributes = element->get_attributes();
 	int index = 0;
 	attributes[key] = value;
@@ -65,28 +70,34 @@ void XML::Set(string id, string key, string value)
 }
 void XML::Text(string id) {
 
-	Element element = *Element_ById(id);
-	if (element.get_childs().size() != 0)
+	Element* element = Element_ById(id);
+	if (!element)
+		return;
+	if (element->get_childs().size() != 0)
 	{
-		auto childs = element.get_childs();
+		auto childs = element->get_childs();
 		for (auto x : childs)
 		{
 			cout << x.To_string() << endl;
 		}
 	}
 	else
-		cout << element.get_text() << endl;
+		cout << element->get_text() << endl;
 }
 void XML::Delete(string id, string key) {
 
-	Element element = *Element_ById(id);
-	map<string, string> attributes = element.get_attributes();	
+	Element* element = Element_ById(id);
+	if (!element)
+		return;
+	map<string, string> attributes = element->get_attributes();	
 	attributes.erase(key);	
 	Deserialized.at(Index_ById(id)).set_attributes(attributes);
 }
 void XML::Children(string id) {
-	Element element = *Element_ById(id);
-	for (auto child : element.get_childs())
+	Element* element = Element_ById(id);
+	if (!element)
+		return;
+	for (auto child : element->get_childs())
 	{
 		cout << "-" << child.get_name();
 		for(auto attribute:child.get_attributes())
@@ -97,7 +108,10 @@ void XML::Children(string id) {
 }
 Element& XML::Child(string id, size_t n)
 {
-	Element* element = Element_ById(id);
+	Element* element; 
+	element = Element_ById(id);
+	if (!element)
+		return *element;
 	if (n >= 0 && n < element->get_childs().size())
 	{
 		string id = element->get_childs().at(n).get_id();
@@ -108,6 +122,8 @@ Element& XML::Child(string id, size_t n)
 void XML::NewChild(string id)
 {
 	Element* element = Element_ById(id);
+	if (!element)
+		return;
 	Element* new_child = new Element();
 	string child_Id = to_string(next_Id);
 	int i = Index_ById(element->get_id());
@@ -136,6 +152,7 @@ Element* XML::Element_ById(string id) {
 	if (index==Deserialized.size())
 	{
 		cout << "Invalid ID" << endl;
+		return NULL;
 	}
 	Element* element = &Deserialized.at(index);
 	return element;

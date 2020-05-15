@@ -53,6 +53,11 @@ void Repl::REPL() {
 			{
 				xml->Print();
 			}
+			else
+			{
+				cout << "Invalid Command" << endl;
+				continue;
+			}
 		}
 		else
 		{
@@ -68,11 +73,12 @@ void Repl::REPL() {
 				{
 					string path = Tokens_to_path(tokens);
 					file.Open(path);
-					xml = new XML(file.get_content());
-					xpath = new XPath(xml->get_Deserialized());
 				}
-				else
+				else 
 					file.Open(tokens[0]);
+
+				xml = new XML(file.get_content());
+				xpath = new XPath(xml->get_Deserialized());
 				file_Opened = true;
 				
 			}
@@ -103,7 +109,7 @@ void Repl::REPL() {
 			}
 			else if (strcmp(command.c_str(), "child") == 0)
 			{
-				xml->Child(tokens[0], stoi(tokens[1]));
+				cout << xml->Child(tokens[0], stoi(tokens[1])).To_string() << endl;
 			}
 			else if (strcmp(command.c_str(), "text") == 0)
 			{
@@ -132,6 +138,11 @@ void Repl::REPL() {
 						cout <<" - " << x << endl;
 					}
 				}
+			}
+			else
+			{
+				cout << "Invalid Command" << endl;
+				continue;
 			}
 		}
 	}

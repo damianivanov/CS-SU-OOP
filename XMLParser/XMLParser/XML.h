@@ -8,7 +8,7 @@ class XML
 {
 public:
 	XML();
-	XML(std::vector<std::string> content);
+	XML(const std::vector<std::string> content);
 	~XML();
 	XML* operator=(const XML& other);
 

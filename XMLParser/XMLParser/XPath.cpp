@@ -39,7 +39,7 @@ vector<string> XPath::Parser(string id, string xpath)
 
 		string key = s_index.str();
 		vector<string> elements = xpath_to_vector(xpath);
-		result = this->At(key,elements);
+		result = this->At(key,elements);		
 	}
 	else if (xpath.find('[') != string::npos && xpath.find(']') != string::npos)
 	{
