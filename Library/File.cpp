@@ -30,7 +30,7 @@ void File::Write_Content(std::vector<std::string> text)
 	content.clear();
 	for (auto x: text)
 	{
-		content.push_back(x);
+		content.push_back(x+"\n");
 	}
 }
 bool File::Read_content()
@@ -55,7 +55,8 @@ void File::Open(std::string path)
 	Input_parser(path);
 	if (File_create())
 	{
-		std::cout << "Successfully opened " << name << extension << '\n';
+		if (name!="Users")
+			std::cout << "Successfully opened " << name << extension << '\n';
 		Read_content();
 	}
 }
@@ -76,7 +77,10 @@ void File::Save()
 		FileOf << x;
 	}
 	FileOf.close();
-	std::cout << "Successfully saved " << name << extension << "\n";
+	if (name!="Users")
+	{
+		std::cout << "Successfully saved " << name << extension << "\n";
+	}
 }
 
 void File::SaveAs(std::string new_path)

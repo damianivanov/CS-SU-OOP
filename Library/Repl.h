@@ -15,6 +15,7 @@ public:
 
 private:
 	bool file_Opened;
+	bool loggedIn;
 	User user;
 	File file;
 	Library library;

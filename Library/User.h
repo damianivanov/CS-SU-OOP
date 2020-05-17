@@ -23,13 +23,16 @@ public:
 	void set_password(string password) { this->password = password; }
 	void set_IsAdmin(bool isAdmin) { this->IsAdmin = isAdmin; }
 
+	bool Add(string username, string password);
 	void Loggout();
 	bool Login();
+	bool Remove(string username);
 private:
 
 	string username;
 	string password;
 	bool IsAdmin;
 	string Hidden_password();
+	bool Username_Available(string username);
 };
 

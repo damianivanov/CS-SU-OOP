@@ -28,12 +28,13 @@ void Repl::REPL() {
 		{
 			if (strcmp(command.c_str(),"login")==0)
 			{
-				if (user.get_password() != "" && user.get_username() != "")
-				{
+				if (loggedIn)
 					cout << "You are already logged in." << endl;
-				}
 				else {
-					user.Login();
+					if (user.Login())
+						loggedIn = true;
+					//because of hidden password there is one \n left in the buffer
+					//Enter is \r\n, but i'm capturing only \r
 					cin.ignore(numeric_limits<streamsize>::max(), '\n');
 				}
 			}
@@ -59,9 +60,10 @@ void Repl::REPL() {
 			}
 			else if (strcmp(command.c_str(), "logout") == 0)
 			{
-				if (user.get_password() != "" && user.get_username() != "")
+				if (loggedIn)
 				{
 					user.Loggout();
+					loggedIn = false;
 				}
 				else
 					cout << "No logged in user!" << endl;
@@ -135,22 +137,42 @@ void Repl::REPL() {
 			else if (strcmp(command.c_str(), "delete") == 0)
 			{
 			}
-			else if (strcmp(command.c_str(), "newchild") == 0)
+			else if (strcmp(command.c_str(), "add") == 0 && tokens[0] == "users")
 			{
+				if (loggedIn && user.get_IsAdmin())
+				{
+					user.Add(tokens[2], tokens[3]);
+									
+				}
+				else if (!loggedIn)
+				{
+					cout << "You have to login first!\n";
+				}
+				else {
+					cout << "Only admin can add new users!\n";
+				}
 			}
+			else if (strcmp(command.c_str(), "remove") == 0 && tokens[0] == "users")
+			{
+				if (loggedIn && user.get_IsAdmin())
+				{
+					user.Remove(tokens[2]);
 
+				}
+				else if (!loggedIn)
+				{
+					cout << "You have to login first!\n";
+				}
+				else {
+					cout << "Only admin can remove users!\n";
+				}
+			}
 			else
 			{
 				cout << "Invalid Command" << endl;
 				continue;
 			}
 		}
-
-		/*int count = cin.gcount();
-		if (cin.gcount()==0)
-		{
-			cin.ignore(numeric_limits<streamsize>::max(), '\n');
-		}*/
 	}
 }
 
@@ -185,5 +207,6 @@ string Repl::Tokens_to_path(vector<string> tokens)
 }
 Repl::Repl() {	
 	file_Opened = false; 
+	loggedIn = false;
 }
 Repl::~Repl(){}
