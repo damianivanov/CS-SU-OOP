@@ -1,44 +1,52 @@
 #include "Repl.h"
 
 void Repl::REPL() {
-	string command;
 	while (true)
 	{
-		cout << "> ";
 		string line;
-		std::getline(cin, line);
-		
-		vector<std::string> tokens;
+		string command;
+		cout << "> ";
+		getline(cin, line);
+		vector<string> tokens;
 		istringstream iss(line);
 		string s;
-		for (int i = 0; iss >> s; i++) {
-			if (i==0)
-			{
-				command = s;
-			}
-			else
-				tokens.push_back(s);
-		}
-		cin.sync();
+		for (int i = 0; iss >> s; i++)
+			tokens.push_back(s);
+		if (tokens.size()==1)
+			command = tokens[0];	
+		else if(tokens.size()>1)
+			command = tokens[1];	
+
 		//You have to open file first
-		if (!file_Opened && (command!="open" && command != "exit"))
+		/*if (!file_Opened && (command != "open" && command != "exit"))
 		{
 			cout << "Currently there is not file opened! Open file first " << endl;
 			continue;
-		}
+		}*/
 
-		if (tokens.size()==0)
+		if (tokens.size() <= 2)
 		{
-			if (strcmp(command.c_str(), "close") == 0)
-			{				
-				xml->Clear();
+			if (strcmp(command.c_str(),"login")==0)
+			{
+				if (user.get_password() != "" && user.get_username() != "")
+				{
+					cout << "You are already logged in." << endl;
+				}
+				else {
+					user.Login();
+					cin.ignore(numeric_limits<streamsize>::max(), '\n');
+				}
+			}
+			else if (strcmp(command.c_str(), "close") == 0)
+			{
+				//library->Clear();
 				file.Close();
 				file_Opened = false;
 			}
 			else if (strcmp(command.c_str(), "save") == 0)
 			{
-				xml->Serialization();
-				file.Write_Content(xml->get_Content());
+				//xml->Serialization();
+				//file.Write_Content();
 				file.Save();
 			}
 			else if (strcmp(command.c_str(), "help") == 0)
@@ -49,10 +57,23 @@ void Repl::REPL() {
 			{
 				Exit();
 			}
-			else if (strcmp(command.c_str(), "print") == 0)
+			else if (strcmp(command.c_str(), "logout") == 0)
 			{
-				xml->Print();
+				if (user.get_password() != "" && user.get_username() != "")
+				{
+					user.Loggout();
+				}
+				else
+					cout << "No logged in user!" << endl;
 			}
+			else if (strcmp(command.c_str(), "all") == 0) 
+			{
+				if (user.get_password()!="" && user.get_username()!="")
+				{
+					library.All();
+				}
+			}
+
 			else
 			{
 				cout << "Invalid Command" << endl;
@@ -76,17 +97,13 @@ void Repl::REPL() {
 				}
 				else 
 					file.Open(tokens[0]);
-
-				xml = new XML(file.get_content());
-				xpath = new XPath(xml->get_Deserialized());
 				file_Opened = true;
 				
 			}
 			else if (strcmp(command.c_str(), "saveas") == 0)
 			{
 				string path;
-				xml->Serialization();
-				file.Write_Content(xml->get_Content());
+				//file.Write_Content();
 				if (tokens.size() > 1)
 				{
 					string path = Tokens_to_path(tokens);
@@ -95,77 +112,64 @@ void Repl::REPL() {
 				else			
 					file.SaveAs(tokens[0]);
 			}
-			else if (strcmp(command.c_str(), "select") == 0)
+			else if (strcmp(command.c_str(), "info") == 0)
 			{
-				xml->Select(tokens[0], tokens[1]);
+
 			}
-			else if (strcmp(command.c_str(), "set") == 0)
+			else if (strcmp(command.c_str(), "find") == 0)
 			{
-				xml->Set(tokens[0], tokens[1], tokens[2]);
+
 			}
-			else if (strcmp(command.c_str(), "children") == 0)
+			else if (strcmp(command.c_str(), "sort") == 0)
 			{
-				xml->Children(tokens[0]);
+
 			}
-			else if (strcmp(command.c_str(), "child") == 0)
+			else if (strcmp(command.c_str(), "add") == 0 && tokens[0]=="books")
 			{
-				cout << xml->Child(tokens[0], stoi(tokens[1])).To_string() << endl;
+				//library.Add();
 			}
 			else if (strcmp(command.c_str(), "text") == 0)
 			{
-				xml->Text(tokens[0]);
+
 			}
 			else if (strcmp(command.c_str(), "delete") == 0)
 			{
-				xml->Delete(tokens[0], tokens[1]);
 			}
 			else if (strcmp(command.c_str(), "newchild") == 0)
 			{
-				xml->NewChild(tokens[0]);
 			}
-			else if (strcmp(command.c_str(), "xpath") == 0)
-			{
-				if (tokens.size()<2)
-				{
-					cout << "Invalid XPath" << endl;
-					continue;
-				}
-				auto result = xpath->Parser(tokens[0], tokens[1]);
-				for (auto x : result)
-				{
-					if (x!="")
-					{
-						cout <<" - " << x << endl;
-					}
-				}
-			}
+
 			else
 			{
 				cout << "Invalid Command" << endl;
 				continue;
 			}
 		}
+
+		/*int count = cin.gcount();
+		if (cin.gcount()==0)
+		{
+			cin.ignore(numeric_limits<streamsize>::max(), '\n');
+		}*/
 	}
 }
 
 void Repl::Help() {
 	cout << "The following commands are supported:" << endl;
-	cout << "- open <file>				opens <file>" << endl;
-	cout << "- close					closes currently opened file" << endl;
-	cout << "- save						saves the currently open file" << endl;
-	cout << "- saveas <file>			saves the currently open file in <file>" << endl;
-	cout << "- help						prints this information" << endl;
-	cout << "- exit						exists the program" << endl;
-	cout << "  - print						prints the content of XML file" << endl;
-	cout << "  - select <id> <key>			prints the value of an attribute with <key> of element with <id> " << endl;
-	cout << "  - set <id> <key> <value>		sets <value> with <key> of element with <id>" << endl;
-	cout << "  - children <id>				list with attributes of nested elements" << endl;
-	cout << "  - child <id> <n>				<n>-th child of element <id>" << endl;
-	cout << "  - text <id>					text of element with Id = <id>" << endl;
-	cout << "  - delete <id> <key>			deletes attribute with key of element <id>" << endl;
-	cout << "  - newchild <id>				adds New child to element <id>" << endl;
-	cout << "  - xpath <id> <XPath>			<XPath> to element with <id>" << endl;
-
+	cout << "- open <file> --- opens <file>" << endl;
+	cout << "- close --- closes currently opened file" << endl;
+	cout << "- save --- saves the currently open file" << endl;
+	cout << "- saveas <file> --- saves the currently open file in <file>" << endl;
+	cout << "- help --- prints this information" << endl;
+	cout << "- exit	--- exists the program" << endl;
+	cout << "- login <username> <password>"<< endl;
+	cout << "- logout --- logout only if you are already logged in"<<endl;
+	cout << "- books all --- prints: title,genre,author,id for every book "<<endl;
+	cout << "- books info <id> --- full info for book with this id"<<endl;
+	cout << "- books find <option> <option_string> --- finds book by given option"<<endl;
+	cout << "- books sort <option> [desc|asc] --- (options: title,author,year,rating)\n";
+	cout << "- users add <user> <password> --- adds user to the database\n";
+	cout << "- users remove --- deletes user from database (admin only)\n";
 }
 void Repl::Exit() {
 	cout << "Exiting the program..." << endl;
@@ -180,8 +184,6 @@ string Repl::Tokens_to_path(vector<string> tokens)
 	return path.substr(0, path.size() - 1);
 }
 Repl::Repl() {	
-	file_Opened = false;
-	xml = new XML();
-	xpath = new XPath();
+	file_Opened = false; 
 }
 Repl::~Repl(){}

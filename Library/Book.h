@@ -21,16 +21,18 @@ public:
 	double get_rating() { return this->rating; }
 	int get_id() {return this->id; }
 
-	//setter
-	void set_author(string author);
-	void set_title(string title);
-	void set_genre(string genre);
-	void set_description(string description);
-	void set_release_year(unsigned release_year);
-	void set_keywords(vector<string> const &keyword);
-	void set_rating(double rating);
-	void set_id(int id);
+	//setter																		
+	void set_author(string author) { this->author = author; }
+	void set_title(string title) { this->title = title; }
+	void set_genre(string genre) { this->genre = genre; }
+	void set_description(string description) { this->description = description; }
+	void set_release_year(unsigned release_year) { this->release_year = release_year; }
+	void set_keywords(vector<string> const& keyword) { this->keywords = keywords; }
+	void set_rating(double rating) { this->rating = rating; }
+	void set_id(int id) { this->id = id; }
 
+	string To_String();
+	string FullInfo();
 private:
 	string author;
 	string title;

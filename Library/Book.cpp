@@ -7,11 +7,33 @@ Book::Book(){
 }
 Book::~Book(){}
 
-void Book::set_author(string author) {this->author = author;}
-void Book::set_title(string title) { this->title = title; }
-void Book::set_genre(string genre) { this->genre = genre; }
-void Book::set_description(string description) { this->description = description; }
-void Book::set_release_year(unsigned release_year) { this->release_year = release_year; }
-void Book::set_keywords(vector<string> const &keywords) { this->keywords = keywords; }
-void Book::set_rating(double rating) { this->rating = rating; }
-void Book::set_id(int id) { this->id = id; }
+string Book::To_String() {
+	string sbuilder;
+	sbuilder.append(" -");
+	sbuilder.append(title);
+	sbuilder.append("\n  -");
+	sbuilder.append(author);
+	sbuilder.append("\n  -");
+	sbuilder.append(genre);
+	sbuilder.append("\n  -");
+	sbuilder.append(to_string(id));
+	sbuilder.append("\n");
+	return sbuilder;
+}
+string Book::FullInfo() {
+	string fullInfo = To_String();
+	fullInfo.append(" -");
+	fullInfo.append(to_string(rating));
+	fullInfo.append("\n  -");
+	fullInfo.append(description);
+	fullInfo.append("\n  -");
+	fullInfo.append(to_string(release_year));
+	fullInfo.append("\n  -");
+	for (auto keyword : keywords)
+	{
+		fullInfo.append(keyword);
+		fullInfo.append("|");
+	}
+	fullInfo.append("\n");
+	return fullInfo;
+}
