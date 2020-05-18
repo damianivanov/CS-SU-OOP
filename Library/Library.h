@@ -20,7 +20,7 @@ public:
 
 private:
 	void Read_Book_Info(Book& book);
-	vector<Book*> books;
+	vector<Book> books;
 	int next_id;
 };
 

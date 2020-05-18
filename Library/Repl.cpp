@@ -9,57 +9,14 @@ void Repl::REPL() {
 		getline(cin, line);
 		vector<string> tokens = Input_to_tokens(line, command);
 
-		if (strcmp(command.c_str(), "login") == 0)
+		//You have to open file first
+		if (!file_Opened && (command != "open" && command != "exit"))
 		{
-			if (loggedIn)
-				cout << "You are already logged in." << endl;
-			else {
-				if (user.Login())
-					loggedIn = true;
-				//because of hidden password there is one \n left in the buffer
-				//Enter is \r\n, but i'm capturing only \r
-				cin.ignore(numeric_limits<streamsize>::max(), '\n');
-			}
+			cout << "Currently there is not file opened! Open file first " << endl;
+			continue;
 		}
-		else if (strcmp(command.c_str(), "close") == 0)
-		{
-			library.Clear();
-			file.Close();
-			file_Opened = false;
-		}
-		//
-		else if (strcmp(command.c_str(), "save") == 0)
-		{
-			file.Write_Content(library.Serialization());
-			file.Save();
-		}
-		//
-		else if (strcmp(command.c_str(), "help") == 0)
-		{
-			Help();
-		}
-		else if (strcmp(command.c_str(), "exit") == 0)
-		{
-			Exit();
-		}
-		else if (strcmp(command.c_str(), "logout") == 0)
-		{
-			if (loggedIn)
-			{
-				user.Loggout();
-				loggedIn = false;
-			}
-			else
-				cout << "No logged in user!" << endl;
-		}
-		else if (strcmp(command.c_str(), "all") == 0)
-		{
-			if (loggedIn)
-			{
-				library.All();
-			}
-		}
-		else if (strcmp(command.c_str(), "open") == 0)
+
+		if (strcmp(command.c_str(), "open") == 0)
 		{
 			if (file_Opened != false)
 			{
@@ -79,26 +36,79 @@ void Repl::REPL() {
 				cout << "Wrong format: open <path>\n";
 				break;
 			}
-			library.Deserialization(file.get_content());
+			vector<string> filecontent = file.get_content();
+			library = new Library(filecontent);
 			file_Opened = true;
 
+		}
+		else if (strcmp(command.c_str(), "close") == 0)
+		{
+			library->Clear();
+			file.Close();
+			file_Opened = false;
+		}
+		else if (strcmp(command.c_str(), "save") == 0)
+		{
+			vector<string> serialized = library->Serialization();
+			file.Write_Content(serialized);
+			file.Save();
 		}
 		else if (strcmp(command.c_str(), "saveas") == 0)
 		{
 			string path;
+			file.Write_Content(library->Serialization());
 			//file.Write_Content();
 			if (tokens.size() > 1)
 			{
 				string path = Tokens_to_path(tokens);
 				file.SaveAs(path);
 			}
-			else
-				file.Write_Content(library.Serialization());
+			else 
 				file.SaveAs(tokens[0]);
+		}
+		else if (strcmp(command.c_str(), "help") == 0)
+		{
+			Help();
+		}
+		else if (strcmp(command.c_str(), "exit") == 0)
+		{
+			Exit();
+		}
+		else if (strcmp(command.c_str(), "login") == 0)
+		{
+			if (loggedIn)
+				cout << "You are already logged in." << endl;
+			else {
+				if (user.Login())
+					loggedIn = true;
+				//because of hidden password there is one \n left in the buffer
+				//Enter is \r\n, but i'm capturing only \r
+				cin.ignore(numeric_limits<streamsize>::max(), '\n');
+			}
+		}
+		else if (strcmp(command.c_str(), "logout") == 0)
+		{
+			if (loggedIn)
+			{
+				user.Loggout();
+				loggedIn = false;
+			}
+			else
+				cout << "No logged in user!" << endl;
+		}
+		else if (strcmp(command.c_str(), "all") == 0)
+		{
+			if (loggedIn)
+			{
+				library->All();
+			}
 		}
 		else if (strcmp(command.c_str(), "info") == 0)
 		{
-
+			if (loggedIn)
+			{
+				library->Info(stoi(tokens[2]));
+			}
 		}
 		else if (strcmp(command.c_str(), "find") == 0)
 		{
@@ -112,7 +122,8 @@ void Repl::REPL() {
 		{
 			if (loggedIn && user.get_IsAdmin())
 			{
-				library.Add();
+				library->Add();
+				
 			}
 			else if (!loggedIn)
 			{
@@ -125,7 +136,7 @@ void Repl::REPL() {
 		{
 			if (loggedIn && user.get_IsAdmin())
 			{
-				library.Remove(stoi(tokens[2]));
+				library->Remove(stoi(tokens[2]));
 			}
 			else if (!loggedIn)
 			{
@@ -204,10 +215,14 @@ vector<string> Repl::Input_to_tokens(string line,string& command) {
 	for (int i = 0; iss >> s; i++)
 		tokens.push_back(s);
 
-	if (tokens.size() > 2)
-		command = tokens[1];
-	else
-		command = tokens[0];
+	if (tokens.size()>0)
+	{
+		if (tokens[0] == "open" || tokens[0] == "saveas" || tokens.size() < 2)
+			command = tokens[0];
+		else if (tokens.size() > 1)
+			command = tokens[1];
+	}
+
 	return tokens;
 }
 string Repl::Tokens_to_path(vector<string> tokens)
@@ -222,5 +237,6 @@ string Repl::Tokens_to_path(vector<string> tokens)
 Repl::Repl() {	
 	file_Opened = false; 
 	loggedIn = false;
+	library = new Library();
 }
 Repl::~Repl(){}

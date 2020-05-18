@@ -61,5 +61,8 @@
     <Text Include="Library.txt">
       <Filter>Resource Files\Files</Filter>
     </Text>
+    <Text Include="Test.txt">
+      <Filter>Resource Files\Files</Filter>
+    </Text>
   </ItemGroup>
 </Project>

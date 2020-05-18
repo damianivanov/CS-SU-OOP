@@ -9,31 +9,35 @@ void Library::Add()
 {
 	Book book;
 	Read_Book_Info(book);
-	this->books.push_back(&book);
+	this->books.push_back(book);
+	cout << book.get_title() << " by: " << book.get_author() << " was added to the database.\n";
 }
 void Library::Remove(int id)
 {
 	int size = books.size();
 	for (int i = 0; i < size ; i++)
 	{
-		if (id == books.at(i)->get_id())
+		if (id == books.at(i).get_id())
 		{
 			this->books.erase(books.begin() + i); 
+			cout << "Book with Id: " << id << " was deleted!\n";
+			return;
 		}
 	}
+	cout << "There is no book with Id: " << id << "!\n";
 }
 void Library::All() {
 	for (auto book : books)
 	{
-		cout << book->To_String() << endl;
+		cout << book.To_String() << endl;
 	}
 }
 void Library::Info(int id) {
 	
 	for (auto book:books)
 	{
-		if (book->get_id()==id)
-			cout << book->FullInfo()<<endl;
+		if (book.get_id()==id)
+			cout << book.FullInfo()<<endl;
 	}
 }
 
@@ -100,23 +104,23 @@ void Library::Deserialization(vector<string> content) {
 			keywords.push_back(tmp);
 		book.set_keywords(keywords);
 		book.set_rating(stod(content[i++]));
-		next_id++;
-		books.push_back(&book);
+		books.push_back(book);
 	}
+	next_id = books[books.size() - 1].get_id()+1;
 }
 vector<string> Library::Serialization()
 {
 	vector<string> content;
 	for (auto book : books)
 	{
-		content.push_back(to_string(book->get_id()));
-		content.push_back(book->get_author());
-		content.push_back(book->get_title());
-		content.push_back(book->get_genre());
-		content.push_back(book->get_description());
-		content.push_back(to_string(book->get_release_year()));
-		content.push_back(book->get_keywords_as_string());
-		content.push_back(to_string(book->get_rating()));
+		content.push_back(to_string(book.get_id()));
+		content.push_back(book.get_author());
+		content.push_back(book.get_title());
+		content.push_back(book.get_genre());
+		content.push_back(book.get_description());
+		content.push_back(to_string(book.get_release_year()));
+		content.push_back(book.get_keywords_as_string());
+		content.push_back(to_string(book.get_rating()));
 	}
 	return content;
 }

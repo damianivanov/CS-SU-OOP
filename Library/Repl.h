@@ -18,7 +18,7 @@ private:
 	bool loggedIn;
 	User user;
 	File file;
-	Library library;
+	Library* library;
 
 	vector<string> Input_to_tokens(string line, string& command);
 	string Tokens_to_path(vector<string> tokens);
