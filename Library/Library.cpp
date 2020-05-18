@@ -30,6 +30,7 @@ void Library::All() {
 	for (auto book : books)
 	{
 		cout << book.To_String() << endl;
+		cout << "================================" << endl;
 	}
 }
 void Library::Info(int id) {
@@ -40,7 +41,70 @@ void Library::Info(int id) {
 			cout << book.FullInfo()<<endl;
 	}
 }
+void Library::Find(string option ,string options_string)
+{
+	for (auto book : books) 
+	{
+		string title=book.get_title();
+		string author=book.get_author();
 
+		transform(title.begin(), title.end(), title.begin(), ::tolower);
+		transform(author.begin(), author.end(), author.begin(), ::tolower);
+
+		if (option=="title" && options_string==title)
+		{
+			cout << book.To_String() << endl;
+		}
+		else if(option=="author"&& options_string == author)
+		{
+			cout << book.To_String() << endl;
+		}
+		else if (option == "tag")
+		{
+			vector<string> keywords = book.get_keywords();
+			if (count(keywords.begin(), keywords.end(), options_string))
+			{
+				cout << book.To_String() << endl;
+			}
+		}
+	}
+}
+void Library::Sort(string option, bool asc)
+{
+	if (option=="author")
+	{
+		sort(books.begin(), books.end(), [](Book& b1, Book& b2)
+			{
+				return b1.get_author() < b2.get_author();
+			});
+	}
+	else if (option=="title")
+	{
+		sort(books.begin(), books.end(), [](Book& b1, Book& b2)
+			{
+				return b1.get_title() < b2.get_title();
+			});
+	}
+	else if (option == "year")
+	{
+		sort(books.begin(), books.end(), [](Book& b1, Book& b2) 
+			{
+			return b1.get_release_year() < b2.get_release_year();
+			});
+	}
+	else if (option == "rating")
+	{
+		sort(books.begin(), books.end(), [](Book& b1, Book& b2)
+			{
+				return b1.get_rating() < b2.get_rating();
+			});
+	}
+
+	if (!asc)
+	{
+		reverse(books.begin(), books.end());
+	}
+}
 void Library::Clear() 
 {
 	this->books.clear();
@@ -76,6 +140,7 @@ void Library::Read_Book_Info(Book& book)
 	istringstream iss(tmp);
 	while(iss >> tmp) 
 	{
+		transform(tmp.begin(), tmp.end(), tmp.begin(), ::tolower);
 		keywords.push_back(tmp);
 	}
 	book.set_keywords(keywords);
@@ -87,6 +152,7 @@ void Library::Read_Book_Info(Book& book)
 	book.set_id(next_id++);
 	
 }
+
 void Library::Deserialization(vector<string> content) {
 	for (size_t i=0;i<content.size();)
 	{

@@ -102,20 +102,52 @@ void Repl::REPL() {
 			{
 				library->All();
 			}
+			else
+				cout << "You have to login first!\n";
 		}
 		else if (strcmp(command.c_str(), "info") == 0)
 		{
 			if (loggedIn)
 			{
-				library->Info(stoi(tokens[2]));
+				if (tokens.size() >= 2)
+				{
+					library->Info(stoi(tokens[2]));
+				}
+				else
+					cout << "Invalid Command!\n";
 			}
+			else
+				cout << "You have to login first!\n";
 		}
 		else if (strcmp(command.c_str(), "find") == 0)
 		{
-
+			if (loggedIn)
+			{
+				string option_string;
+				for (size_t i = 3; i < tokens.size()-1; i++)
+				{
+				option_string += tokens[i] + " ";
+				}
+				option_string += tokens[tokens.size()-1];
+				transform(option_string.begin(), option_string.end(),option_string.begin(), ::tolower);
+				transform(tokens[2].begin(), tokens[2].end(), tokens[2].begin(), ::tolower);
+				library->Find(tokens[2],option_string);
+			}
+			else
+				cout << "You have to login first!\n";
 		}
 		else if (strcmp(command.c_str(), "sort") == 0)
 		{
+			if (loggedIn)
+			{
+				transform(tokens[2].begin(), tokens[2].end(), tokens[2].begin(), ::tolower);
+				transform(tokens[3].begin(), tokens[3].end(), tokens[3].begin(), ::tolower);
+
+				bool type = tokens[3] == "asc";
+				library->Sort(tokens[2], type);
+			}
+			else
+				cout << "You have to login first!\n";
 
 		}
 		else if (strcmp(command.c_str(), "add") == 0 && tokens[0] == "books")
@@ -178,7 +210,7 @@ void Repl::REPL() {
 
 		else
 		{
-			cout << "Invalid Command" << endl;
+			cout << "Invalid Command!" << endl;
 			continue;
 		}
 

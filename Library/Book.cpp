@@ -22,31 +22,29 @@ string Book::get_keywords_as_string()
 
 string Book::To_String() {
 	string sbuilder;
-	sbuilder.append(" -");
-	sbuilder.append(title);
-	sbuilder.append("\n  -");
-	sbuilder.append(author);
-	sbuilder.append("\n  -");
-	sbuilder.append(genre);
-	sbuilder.append("\n  -");
+	sbuilder.append("Id: ");
 	sbuilder.append(to_string(id));
-	sbuilder.append("\n");
+	sbuilder.append("\nTitle: ");
+	sbuilder.append(title);
+	sbuilder.append("\nAuthour: ");
+	sbuilder.append(author);
+	sbuilder.append("\nGenre: ");
+	sbuilder.append(genre);
 	return sbuilder;
 }
 string Book::FullInfo() {
 	string fullInfo = To_String();
-	fullInfo.append(" -");
+	fullInfo.append("\nRating: ");
 	fullInfo.append(to_string(rating));
-	fullInfo.append("\n  -");
+	fullInfo.append("\nDescription: ");
 	fullInfo.append(description);
-	fullInfo.append("\n  -");
+	fullInfo.append("\nRelease Year: ");
 	fullInfo.append(to_string(release_year));
-	fullInfo.append("\n  -");
+	fullInfo.append("\nKeywords: ");
 	for (auto keyword : keywords)
 	{
 		fullInfo.append(keyword);
-		fullInfo.append("|");
+		fullInfo.append("| ");
 	}
-	fullInfo.append("\n");
 	return fullInfo;
 }
