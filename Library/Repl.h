@@ -20,6 +20,7 @@ private:
 	File file;
 	Library library;
 
+	vector<string> Input_to_tokens(string line, string& command);
 	string Tokens_to_path(vector<string> tokens);
 	void Help();
 	void Exit();

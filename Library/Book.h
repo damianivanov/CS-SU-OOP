@@ -16,7 +16,8 @@ public:
 	string get_title() { return this->title; }
 	string get_genre() { return this->genre; }
 	string get_description() { return this->description; }
-	unsigned get_release_year() { return this->release_year; }
+	unsigned int get_release_year() { return this->release_year; }
+	string get_keywords_as_string();
 	vector<string> const &get_keywords() { return this->keywords; }
 	double get_rating() { return this->rating; }
 	int get_id() {return this->id; }
@@ -27,7 +28,7 @@ public:
 	void set_genre(string genre) { this->genre = genre; }
 	void set_description(string description) { this->description = description; }
 	void set_release_year(unsigned release_year) { this->release_year = release_year; }
-	void set_keywords(vector<string> const& keyword) { this->keywords = keywords; }
+	void set_keywords(vector<string> const& keywords) { this->keywords = keywords; }
 	void set_rating(double rating) { this->rating = rating; }
 	void set_id(int id) { this->id = id; }
 
@@ -38,7 +39,7 @@ private:
 	string title;
 	string genre;
 	string description;
-	unsigned release_year;
+	unsigned int release_year;
 	vector<string> keywords;
 	double rating;
 	int id;	
