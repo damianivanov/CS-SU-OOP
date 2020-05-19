@@ -1,7 +1,7 @@
 #include "Library.h"
 
 Library::Library() { next_id = 0; }
-Library::Library(vector<string> content) { this->Deserialization(content); }
+Library::Library(const vector<string> content) { this->Deserialization(content); }
 Library::~Library() {}
 
 
@@ -35,14 +35,19 @@ void Library::All() {
 }
 void Library::Info(int id) {
 	
-	for (auto book:books)
+	for (auto book : books)
 	{
-		if (book.get_id()==id)
-			cout << book.FullInfo()<<endl;
+		if (book.get_id() == id) {
+			cout << book.FullInfo() << endl;
+			break;
+		}
 	}
+	cout << "No book with Id: " << id << " was found" << endl;	
+
 }
 void Library::Find(string option ,string options_string)
 {
+	bool found = false;
 	for (auto book : books) 
 	{
 		string title=book.get_title();
@@ -54,10 +59,12 @@ void Library::Find(string option ,string options_string)
 		if (option=="title" && options_string==title)
 		{
 			cout << book.To_String() << endl;
+			found = true;
 		}
 		else if(option=="author"&& options_string == author)
 		{
 			cout << book.To_String() << endl;
+			found = true;
 		}
 		else if (option == "tag")
 		{
@@ -65,8 +72,13 @@ void Library::Find(string option ,string options_string)
 			if (count(keywords.begin(), keywords.end(), options_string))
 			{
 				cout << book.To_String() << endl;
+				found = true;
 			}
 		}
+	}
+	if (!found)
+	{
+		cout << "Book with " << option << ": " << options_string << " wasn't found" << endl;
 	}
 }
 void Library::Sort(string option, bool asc)
@@ -105,6 +117,7 @@ void Library::Sort(string option, bool asc)
 		reverse(books.begin(), books.end());
 	}
 }
+
 void Library::Clear() 
 {
 	this->books.clear();
@@ -154,6 +167,11 @@ void Library::Read_Book_Info(Book& book)
 }
 
 void Library::Deserialization(vector<string> content) {
+	if (content.size()%8!=0)
+	{
+		cout << "The file might be corrupted!" << endl;
+		return;
+	}
 	for (size_t i=0;i<content.size();)
 	{
 		Book book;

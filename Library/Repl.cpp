@@ -49,7 +49,7 @@ void Repl::REPL() {
 		}
 		else if (strcmp(command.c_str(), "save") == 0)
 		{
-			vector<string> serialized = library->Serialization();
+				vector<string> serialized = library->Serialization();
 			file.Write_Content(serialized);
 			file.Save();
 		}
@@ -74,6 +74,7 @@ void Repl::REPL() {
 		{
 			Exit();
 		}
+
 		else if (strcmp(command.c_str(), "login") == 0)
 		{
 			if (loggedIn)
@@ -150,6 +151,7 @@ void Repl::REPL() {
 				cout << "You have to login first!\n";
 
 		}
+
 		else if (strcmp(command.c_str(), "add") == 0 && tokens[0] == "books")
 		{
 			if (loggedIn && user.get_IsAdmin())
@@ -231,8 +233,8 @@ void Repl::Help() {
 	cout << "- books find <option> <option_string> --- finds book by given option"<<endl;
 	cout << "- books sort <option> [desc|asc] --- (options: title,author,year,rating)\n";
 	cout << "- books info <id> --- full info for book with this id"<<endl;
-	cout << "- users add <user> <password> --- adds user to the database\n";
-	cout << "- books remove <id> --- removes book by given ID" << endl;
+	cout << "- books add --- adds book to the database (admin only)\n";
+	cout << "- books remove <id> --- removes book by given ID (admin only)" << endl;
 	cout << "- users add <username> <password> --- adds user in the database (admin only)\n";
 	cout << "- users remove --- deletes user from database (admin only)\n";
 }

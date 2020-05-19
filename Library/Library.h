@@ -1,14 +1,14 @@
 #pragma once
+#include <iostream>
 #include "Book.h"
 #include "User.h"
-#include <iostream>
 #include <algorithm>
 
 class Library
 {
 public:
 	Library();	
-	Library(vector<string> content);
+	Library(const vector<string> content);
 	~Library();
 	void Clear();
 
