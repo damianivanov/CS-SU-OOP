@@ -25,9 +25,6 @@ public:
 private:
 	void Read_Book_Info(Book& book);
 	vector<Book> books;
-	bool By_Year(Book b1, Book b2) {
-		return (b1.get_release_year() < b2.get_release_year());
-	}
 	int next_id;
 };
 

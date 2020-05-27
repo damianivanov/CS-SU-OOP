@@ -273,4 +273,4 @@ Repl::Repl() {
 	loggedIn = false;
 	library = new Library();
 }
-Repl::~Repl(){}
+Repl::~Repl() { delete library; }

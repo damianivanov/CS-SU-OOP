@@ -184,4 +184,7 @@ Repl::Repl() {
 	xml = new XML();
 	xpath = new XPath();
 }
-Repl::~Repl(){}
+Repl::~Repl() {
+	delete xpath;
+	delete xml;
+}
