@@ -127,7 +127,7 @@ void Repl::REPL() {
 				string option_string;
 				for (size_t i = 3; i < tokens.size()-1; i++)
 				{
-				option_string += tokens[i] + " ";
+					option_string += tokens[i] + " ";
 				}
 				option_string += tokens[tokens.size()-1];
 				transform(option_string.begin(), option_string.end(),option_string.begin(), ::tolower);
@@ -142,10 +142,13 @@ void Repl::REPL() {
 			if (loggedIn)
 			{
 				transform(tokens[2].begin(), tokens[2].end(), tokens[2].begin(), ::tolower);
-				transform(tokens[3].begin(), tokens[3].end(), tokens[3].begin(), ::tolower);
-
-				bool type = tokens[3] == "asc";
-				library->Sort(tokens[2], type);
+				bool type = true;
+				if (tokens.size()>3)
+				{
+					transform(tokens[3].begin(), tokens[3].end(), tokens[3].begin(), ::tolower);
+					type = tokens[3] == "asc";
+				}
+				library->Sort(tokens[2], type);	
 			}
 			else
 				cout << "You have to login first!\n";
@@ -211,10 +214,7 @@ void Repl::REPL() {
 		}
 
 		else
-		{
 			cout << "Invalid Command!" << endl;
-			continue;
-		}
 
 	}
 }
@@ -242,6 +242,7 @@ void Repl::Exit() {
 	cout << "Exiting the program..." << endl;
 	exit(0);
 }
+
 vector<string> Repl::Input_to_tokens(string line,string& command) {
 	vector<string> tokens;
 	istringstream iss(line);

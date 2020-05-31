@@ -14,6 +14,7 @@ void Library::Add()
 }
 void Library::Remove(int id)
 {
+	bool removed = false;
 	int size = books.size();
 	for (int i = 0; i < size ; i++)
 	{
@@ -21,28 +22,36 @@ void Library::Remove(int id)
 		{
 			this->books.erase(books.begin() + i); 
 			cout << "Book with Id: " << id << " was deleted!\n";
-			return;
+			removed = true;
 		}
 	}
-	cout << "There is no book with Id: " << id << "!\n";
+	if (!removed)
+	{
+		cout << "There is no book with Id: " << id << "!\n";
+	}
 }
 void Library::All() {
 	for (auto book : books)
 	{
 		cout << book.To_String() << endl;
-		cout << "================================" << endl;
+		cout << "--------------------------------" << endl;
 	}
 }
 void Library::Info(int id) {
 	
+	bool found = false;
 	for (auto book : books)
 	{
 		if (book.get_id() == id) {
 			cout << book.FullInfo() << endl;
-			break;
+			found = true;
 		}
 	}
-	cout << "No book with Id: " << id << " was found" << endl;	
+
+	if (!found)
+	{
+		cout << "No book with Id: " << id << " was found" << endl;	
+	}
 
 }
 void Library::Find(string option ,string options_string)
@@ -83,6 +92,7 @@ void Library::Find(string option ,string options_string)
 }
 void Library::Sort(string option, bool asc)
 {
+	bool sorted = true;
 	if (option=="author")
 	{
 		sort(books.begin(), books.end(), [](Book& b1, Book& b2)
@@ -111,10 +121,17 @@ void Library::Sort(string option, bool asc)
 				return b1.get_rating() < b2.get_rating();
 			});
 	}
-
+	else {
+		sorted = false;
+		cout << "\"" << option << "\" is not a valid option for sorting!\n";
+	}
 	if (!asc)
 	{
 		reverse(books.begin(), books.end());
+	}
+	if (sorted)
+	{
+		cout << "Books sorted by " << option << endl;
 	}
 }
 

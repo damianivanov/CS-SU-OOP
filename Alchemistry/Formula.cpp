@@ -2,9 +2,7 @@
 Formula::Formula(){
 	result = NULL;
 }
-Formula::~Formula(){
-
-}
+Formula::~Formula(){}
 string Formula::to_string() {
 	string sb = "";
 	for (size_t i=0;i<elements.size()-2;++i)
