@@ -95,6 +95,7 @@ int main()
 	//organisation payer
 	Institution* most = find_most_popular_institution(v_institutions, v_person);
 
+	//from 5 to 4 (1 invalid)
 	auto list = clear_institutions(v_institutions);
 }
 
