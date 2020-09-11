@@ -1,31 +1,32 @@
-<people>
-	<person id="0">
-		<name>John Smith</name>
-		<address>USA</address>
+<people id="4">
+	<person id="0_1">
+		<name id="5">John Smith</name>
+		<address id="6">USA</address>
+		< id="22"></>
 	</person>
 	<person id="3">
-		<name>Ivan Petrov</name>
-		<address>Bulgaria</address>
-			<city>Sofia</city>
+		<name id="7">Ivan Petrov</name>
+		<address id="8">
+			<city id="9">Sofia</city>
 	</person>
-	<person id="1">
-		<name>Stamat Petrov</name>
-		<address>Bulgaria</address>
-			<city>Sofia</city>
+	<person id="1_1">
+		<name id="10">Stamat Petrov</name>
+		<address id="11">
+			<city id="12">Sofia</city>
 	</person>
 	<person id="2">
-		<name>Damian Petrov</name>
-		<address>Bulgaria</address>
-			<city>Burgas</city>
+		<name id="13">Damian Petrov</name>
+		<address id="14">
+			<city id="15">Burgas</city>
 	</person>
-	<person id="1">
-		<name>Georgi Ivanov</name>
-		<address>Bulgaria</address>
-		<tel>0886500</tel>
+	<person id="1_2">
+		<name id="16">Georgi Ivanov</name>
+		<address id="17">Bulgaria</address>
+		<tel id="18">0886500</tel>
 	</person>
-	<person id="0">
-		<name>Dimitar Petrov</name>
-		<address>Bulgaria</address>
-		<age>21</age>
-	</person>	
+	<person id="0_2">
+		<name id="19">Dimitar Petrov</name>
+		<address id="20">Bulgaria</address>
+		<age id="21">21</age>
+	</person>
 </people>

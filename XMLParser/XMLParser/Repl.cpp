@@ -20,6 +20,7 @@ void Repl::REPL() {
 				tokens.push_back(s);
 		}
 		cin.sync();
+
 		//You have to open file first
 		if (!file_Opened && (command!="open" && command != "exit"))
 		{
@@ -179,6 +180,7 @@ string Repl::Tokens_to_path(vector<string> tokens)
 	}
 	return path.substr(0, path.size() - 1);
 }
+
 Repl::Repl() {	
 	file_Opened = false;
 	xml = new XML();

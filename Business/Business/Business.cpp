@@ -59,6 +59,9 @@ int main()
 	Person person3("Basdfgh");
 	person3.set_payer(p3);
 
+	Person person4("asdasd");
+	person4.set_payer(p2);
+
 	v_person.push_back(&person1);
 	v_person.push_back(&person2);
 	v_person.push_back(&person3);
@@ -72,13 +75,17 @@ int main()
 	group2.assosiate_payer(p2);
 	group2.add_person(&person2);
 
+	Group group3{ "group3",institutions++,rand() % (UINT_MAX) };
+	group3.assosiate_payer(p2);
+	group3.add_person(&person4);
+
 	Organisation org1{"Organ1",institutions++};
 	org1.add_institution(&group1);
 
 	Organisation org2{ "Organ2",institutions++ };
 	org2.add_institution(&group1);
-	org2.add_institution(&group1);
-	org2.add_institution(&group2);
+	org2.add_institution(&group2,true);
+	org2.add_institution(&group3,true);
 
 
 	Organisation org3{ "Organ3",institutions++ };
